@@ -1,3 +1,5 @@
+// solved (AC)
+// https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/
 class Solution {
 public:
   bool hasMatch(char c1, char c2) {
