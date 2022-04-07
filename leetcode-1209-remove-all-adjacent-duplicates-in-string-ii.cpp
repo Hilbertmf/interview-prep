@@ -1,3 +1,5 @@
+// solved (AC)
+// https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
 class Solution {
 public:
   string removeDuplicates(string s, int k) {

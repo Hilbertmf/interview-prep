@@ -1,5 +1,4 @@
-
-// https://leetcode.com/problems/palindrome-linked-list/
+// https://leetcode.com/problems/product-of-array-except-self/
 #include <bits/stdc++.h> 
 using namespace std; 
 #define DEBUG(x) cout << #x << " >>>> " << x << endl 

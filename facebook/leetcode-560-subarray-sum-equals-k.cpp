@@ -1,5 +1,3 @@
-
-// https://leetcode.com/problems/palindrome-linked-list/
 #include <bits/stdc++.h> 
 using namespace std; 
 #define DEBUG(x) cout << #x << " >>>> " << x << endl 
@@ -10,7 +8,11 @@ using namespace std;
 #define MEM(arr, val) memset(arr, (val), sizeof(arr)) 
 #define FASTIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0); 
 const int MOD = 1000000007; // 10^9 - 7 
- 
+
+int subarraySum(vector<int>& nums, int k) {
+
+}
+
 int main() { 
 	FASTIO;
 	

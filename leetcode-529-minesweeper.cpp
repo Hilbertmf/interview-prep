@@ -1,3 +1,5 @@
+// solved (AC)
+// https://leetcode.com/problems/minesweeper/
 #include <bits/stdc++.h> 
 using namespace std; 
 #define DEBUG(x) cout << #x << " >>>> " << x << endl 

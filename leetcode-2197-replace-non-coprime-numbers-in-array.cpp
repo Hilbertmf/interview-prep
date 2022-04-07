@@ -1,3 +1,5 @@
+// solved (AC)
+// https://leetcode.com/problems/replace-non-coprime-numbers-in-array/
 class Solution {
 public:
   bool non_coprime(int n1, int n2) {
