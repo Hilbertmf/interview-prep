@@ -22,6 +22,9 @@ const int MOD = 1000000007; // 10^9 - 7
 
 class Solution {
 public:
+
+// time: O(n)
+// space: O(1)
 bool dfs(TreeNode *curr, TreeNode*& lca, TreeNode *p, TreeNode *q) {
 		if(curr == nullptr) return false;
 
@@ -48,8 +51,6 @@ bool dfs(TreeNode *curr, TreeNode*& lca, TreeNode *p, TreeNode *q) {
 		return lca;
     }
 };
-
-
 
 // time: O(n)
 // space: O(n)
@@ -101,10 +102,3 @@ dfs from root till find target
     if target return true
     if child == true insert node in parents collection (vector)
 */
-
-int main() { 
-	FASTIO;
-	
-	
-	return 0; 
-}
