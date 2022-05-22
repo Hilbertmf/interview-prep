@@ -1,18 +1,23 @@
-// https://leetcode.com/problems/product-of-array-except-self/
-#include <bits/stdc++.h> 
-using namespace std; 
-#define DEBUG(x) cout << #x << " >>>> " << x << endl 
-#define MID(l, r) (l + (r - l) / 2) 
-#define CEILDIVISION(x, y) ((x + y - 1) / y) 
-#define INF (int)1e9 
-#define LONGINF (long long)1e18 
-#define MEM(arr, val) memset(arr, (val), sizeof(arr)) 
-#define FASTIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0); 
-const int MOD = 1000000007; // 10^9 - 7 
- 
-int main() { 
-	FASTIO;
-	
-	
-	return 0; 
-}
+// https://leetcode.com/problems/leetcode-238-product-of-array-except-self/
+// time: O(n)
+// space: O(1)
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        vector<int> result(nums.size(), 1);
+        int prefixProd = nums[0];
+        int suffixProd = nums[nums.size() - 1];
+
+        for(int i = 1; i < nums.size(); ++i) {
+            result[i] *= prefixProd;
+            prefixProd *= nums[i];
+        }
+
+        for(int i = nums.size() - 2; i >= 0 ; --i) {
+            result[i] *= suffixProd;
+            suffixProd *= nums[i];
+        }
+
+        return result;
+    }
+};
