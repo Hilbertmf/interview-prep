@@ -11,16 +11,7 @@ public:
         }
         return true;
     }
-
-    string helper(queue<char> window) {
-        string res;
-        while(!window.empty()) {
-            res += window.front();
-            window.pop();
-        }
-        return res;
-    }
-
+    
     string minWindow(string s, string t) {
         queue<char> window;
         unordered_map<char, int> windowMap;
