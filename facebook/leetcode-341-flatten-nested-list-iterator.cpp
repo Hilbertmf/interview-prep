@@ -1,3 +1,5 @@
+// https://leetcode.com/problems/flatten-nested-list-iterator
+// accepted
 /**
  * // This is the interface that allows for creating nested lists.
  * // You should not implement it, or speculate about its implementation
@@ -15,46 +17,89 @@
  *     const vector<NestedInteger> &getList() const;
  * };
  */
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i(nestedList);
+ * while (i.hasNext()) cout << i.next();
+ */
+class NestedIterator {
+public:
+    // iterative solution
+    // time: O(n)
+    // space: O(n)
+    vector<int> list;
+    vector<int>::iterator it;
+
+    void populateList(NestedInteger& item) {
+        stack<NestedInteger> myStack;
+        myStack.push(item);
+
+        while(!myStack.empty()) {
+            auto top = myStack.top();
+            myStack.pop();
+            if(top.isInteger()) {
+                list.push_back(top.getInteger());
+            }
+            else {
+                for(auto& elem : top.getList()) {
+                    myStack.push(elem);
+                }
+            }
+        }
+    }
+
+    NestedIterator(vector<NestedInteger> &nestedList) {
+        for(auto &item : nestedList) {
+            dfsIterative(item)/
+        }
+
+        for(int i = nestedList.size() - 1; i >= 0; --i)
+            populateList(nestedList[i]);
+
+        reverse(list.begin(), list.end());
+        it = list.begin();
+    }
+
+    int next() {
+        return *it++;
+    }
+
+    bool hasNext() {
+        return it != list.end();
+    }
+};
+
 // recursive solution
-// time: O(num of integers)
-// space: O(num of integers + depth of list)
+// time: O(n)
+// space: O(n)
 class NestedIterator {
 public:
     vector<int> list;
     vector<int>::iterator it;
-    
+
     void dfs(NestedInteger& item) {
         if(item.isInteger()) { // integer
             list.push_back(item.getInteger());
         }
         else {
-            vector<NestedInteger> currList = item.getList();
-            for(auto& currItem : currList) {
+            for(auto& currItem : currList.getList()) {
                 dfs(currItem); 
             }
         }
     }
-    
+
     NestedIterator(vector<NestedInteger> &nestedList) {
         for(auto& item : nestedList) {
             dfs(item);
         }
         it = list.begin();
     }
-    
+
     int next() {
-        int res = *it;
-        ++it;
-        return res;
+        return *it++;
     }
     
     bool hasNext() {
         return it != list.end();
     }
 };
-
-/**
- * Your NestedIterator object will be instantiated and called as such:
- * NestedIterator i(nestedList);
- * while (i.hasNext()) cout << i.next();
- */
