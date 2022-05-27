@@ -30,7 +30,7 @@ public:
     vector<int> list;
     vector<int>::iterator it;
 
-    void populateList(NestedInteger& item) {
+    void dfsIterative(NestedInteger& item) {
         stack<NestedInteger> myStack;
         myStack.push(item);
 
@@ -41,22 +41,18 @@ public:
                 list.push_back(top.getInteger());
             }
             else {
-                for(auto& elem : top.getList()) {
-                    myStack.push(elem);
+                int size = top.getList().size();
+                for(int i = size - 1; i >= 0; --i) {
+                    myStack.push(top.getList()[i]);
                 }
             }
         }
     }
 
     NestedIterator(vector<NestedInteger> &nestedList) {
-        for(auto &item : nestedList) {
-            dfsIterative(item)/
-        }
+        for(auto &item : nestedList)
+            dfsIterative(item);
 
-        for(int i = nestedList.size() - 1; i >= 0; --i)
-            populateList(nestedList[i]);
-
-        reverse(list.begin(), list.end());
         it = list.begin();
     }
 
@@ -98,7 +94,7 @@ public:
     int next() {
         return *it++;
     }
-    
+
     bool hasNext() {
         return it != list.end();
     }
