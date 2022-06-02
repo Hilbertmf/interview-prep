@@ -31,6 +31,7 @@ obj/
 ######################
 in.txt
 out.txt
+output.txt
 *.log
 logs
 *.sql
