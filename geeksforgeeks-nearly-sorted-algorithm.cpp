@@ -31,18 +31,18 @@ void print(vector<int>& arr) {
 }
 
 int main() {
-	int t;
-	cin >> t;
-	while(t--) {
-	    
-	    int n, k;    
-	    cin >> n >> k;
-	    vector<int> arr(n);
-	    for(int& num : arr) cin >> num;
-	    
-	    getSorted(arr, k);
-	    print(arr);
-	}
-	
-	return 0;
+    int t;
+    cin >> t;
+    while(t--) {
+
+        int n, k;
+        cin >> n >> k;
+        vector<int> arr(n);
+        for(int& num : arr) cin >> num;
+
+        getSorted(arr, k);
+        print(arr);
+    }
+
+    return 0;
 }

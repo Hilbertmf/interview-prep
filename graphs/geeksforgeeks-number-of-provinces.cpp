@@ -1,8 +1,5 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 class Solution {
-  public:
+    public:
     // dfs-like function to mark all connected segment as visited
     // and returns false if its already been marked
     bool isNewProvince(int source, vector<vector<int>>& graph, vector<bool>& visited) {
@@ -19,7 +16,7 @@ class Solution {
             return false;
         }
     }
-    
+
     int numProvinces(vector<vector<int>> adj, int V) {
         int count = 0;
         vector<bool> visited(V);
