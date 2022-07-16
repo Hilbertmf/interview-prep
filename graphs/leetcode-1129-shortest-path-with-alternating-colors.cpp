@@ -1,73 +1,64 @@
-// time limit exceeded
+// accepted
 // https://leetcode.com/problems/shortest-path-with-alternating-colors/
-#include <bits/stdc++.h>
-using namespace std;
-
-#define INF 1e9
+// time: O(V + E)
+// space: O(V)
+// 2d graph, one dimension for each color of edges
+// one visited arrays for each color
+// perform bfs starting from blue and then from red
 class Solution {
 public:
-    struct state{
+    #define INF (int)1e8
+    struct state {
         int node;
-        char color;
+        int color;
         int dist;
     };
-    
-    void bfs(int source, vector<int>& dists, vector<list<pair<int, char>>>& graph,
-    vector<int>& parents, vector<unordered_set<string>>& visited) {
-        queue<state> q;
-        q.push((state){source, ' ', 0});
-        // mark source as visited
-        for(int i = 0; i < parents[source]; ++i) {
-            visited[source].insert(to_string(i));
-        }
-        dists[source] = 0;
 
-        while (!q.empty()) {
-            int curr = q.front().node;
-            char color = q.front().color;
-            int dist = q.front().dist;
-            q.pop();
+    void bfs(int node, vector<vector<list<int>>>& graph, vector<vector<bool>>& visited,
+    vector<int>& answer, int color) {
+        queue<state> qu;
+        qu.push((state){node, color, 0});
 
+        while (!qu.empty()) {
+            int v = qu.front().node;
+            int c = qu.front().color;
+            int dist = qu.front().dist;
+            qu.pop();
 
-            for(auto &edgePair : graph[curr]) {
-                int neighbor = edgePair.first;
-                char neighborColor = edgePair.second;
-
-                if(color == neighborColor ||
-                visited[neighbor].size() >= parents[neighbor])
-                    continue;
-
-                visited[neighbor].insert(to_string(curr) + to_string(neighborColor));
-                dists[neighbor] = min(dists[neighbor], dist + 1);
-                q.push((state){neighbor, neighborColor, dist + 1});
-                
+            for(auto &neighbor : graph[c][v]) {
+                if(visited[c][neighbor]) continue;
+                visited[c][neighbor] = true;
+                answer[neighbor] = min(answer[neighbor], dist + 1);
+                qu.push((state){neighbor, c ^ 1, dist + 1});
             }
         }
     }
     
-    vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges,
-    vector<vector<int>>& blueEdges) {
-        vector<list<pair<int, char>>> graph(n);
-        vector<int> parents(n);
-        vector<int> dists(n, INF);
-        vector<unordered_set<string>> visited(n);
+    vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges) {
+        vector<int> answer(n, INF);
+        vector<vector<list<int>>> graph(2, vector<list<int>>(n));
+        vector<vector<bool>> visited(2, vector<bool>(n));
 
         for(auto &edge : redEdges) {
-            graph[edge[0]].push_back({edge[1], 'r'});
-            parents[edge[1]]++;
+            graph[0][edge[0]].push_back(edge[1]);
         }
 
         for(auto &edge : blueEdges) {
-            graph[edge[0]].push_back({edge[1], 'b'});
-            parents[edge[1]]++;
+            graph[1][edge[0]].push_back(edge[1]);
         }
 
-        for(int i = 0; i < n; ++i) {
-            visited[i].reserve(parents[i]);
+        answer[0] = 0;
+        for(int color = 0; color < 2; ++color) {        
+            if(color > 0)
+                for(int j = 0; j < 2; ++j)
+                    fill(visited[j].begin(), visited[j].end(), false);
+                
+            visited[color][0] = true;
+            bfs(0, graph, visited, answer, color);
         }
 
-        bfs(0, dists, graph, parents, visited);
-        replace(dists.begin(), dists.end(), (int)INF, -1);
-        return dists;
+        replace(answer.begin(), answer.end(), INF, -1);
+
+        return answer;
     }
 };

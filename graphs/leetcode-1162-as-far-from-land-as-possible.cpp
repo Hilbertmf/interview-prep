@@ -1,4 +1,4 @@
-// wrong answer
+// accepted
 // https://leetcode.com/problems/as-far-from-land-as-possible/
 #include <bits/stdc++.h>
 using namespace std;
@@ -9,94 +9,72 @@ public:
     vector<int> dr{1, -1, 0, 0};
     vector<int> dc{0, 0, 1, -1};
 
-    int getDist(int row1, int col1, int row2, int col2) {
-        return abs(row1 - row2) + abs(col1 - col2);
-    }
+    struct state{
+        int row;
+        int col;
+        int dist;
+    };
     
     bool valid(int row, int col, vector<vector<int>>& grid) {
         return row >= 0 && col >= 0 && row < grid.size() && col < grid[0].size();
     }
-    
-    void dfs(int row, int col, int rowPar, int colPar, vector<vector<int>>& grid, vector<vector<bool>>& visited,
-    vector<vector<int>>& distToLand) {
-        if(rowPar != -1 && colPar != -1) {
-            int dist = getDist(row, col, rowPar, colPar);
-            distToLand[row][col] = min(distToLand[row][col], distToLand[rowPar][colPar] + dist);
+
+    void multisourceBfs(vector<pair<int, int>>& land, vector<vector<int>>& grid,
+    vector<vector<int>>& dists) {
+        int rows = grid.size(), cols = grid[0].size();
+        vector<vector<bool>> visited(rows, vector<bool>(cols));
+        queue<state> qu;
+        for(auto &[r, c] : land) {
+            qu.push((state){r, c, 0});
+            dists[r][c] = 0;
+            visited[r][c] = true;
         }
-            
 
-        for(int i = 0; i < 4; ++i) {
-            int nr = row + dr[i];
-            int nc = col + dc[i];
+        while (!qu.empty()) {
+            int r = qu.front().row;
+            int c = qu.front().col;
+            int dist = qu.front().dist;
+            qu.pop();
 
-            if(!valid(nr, nc, grid))
-                continue;
-            if(grid[nr][nc] == 1)
-                distToLand[row][col] = min(distToLand[row][col], getDist(row, col, nr, nc));
-            
-            int dist = getDist(row, col, nr, nc);
-            distToLand[row][col] = min(distToLand[row][col], distToLand[nr][nc] + dist);
-            if(!visited[nr][nc] && grid[nr][nc] == 0) {
+            for(int i = 0; i < 4; ++i) {
+                int nr = r + dr[i];
+                int nc = c + dc[i];
+                if(!valid(nr, nc, grid) || visited[nr][nc]) continue;
+                
                 visited[nr][nc] = true;
-                dfs(nr, nc, row, col, grid, visited, distToLand);
-                distToLand[row][col] = min(distToLand[row][col], distToLand[nr][nc] + dist);
+                dists[nr][nc] = min(dists[nr][nc], dist + 1);
+                qu.push((state){nr, nc, dists[nr][nc]});
             }
-
         }
     }
-    
+
     int maxDistance(vector<vector<int>>& grid) {
-        vector<vector<int>> distToLand(grid.size(), vector<int>(grid[0].size(), INF));
-        vector<vector<bool>> visited(grid.size(), vector<bool>(grid[0].size()));
-        int num0s = 0, num1s = 0;
-        // populate distToLand on land
-        for(int r = 0; r < grid.size(); ++r) {
-            for(int c = 0; c < grid[0].size(); ++c) {
-                if(grid[r][c] == 1) {
-                    distToLand[r][c] = 0;
-                    num1s++;
-                }
-                else
-                    num0s++;
-            }
+        int numLandCells = 0, numWaterCells = 0;
+        for(int i = 0; i < grid.size(); ++i) {
+            numLandCells += count(grid[i].begin(), grid[i].end(), 1);
+            numWaterCells += count(grid[i].begin(), grid[i].end(), 0);
         }
-
-        for(int r = 0; r < grid.size(); ++r) {
-            for(int c = 0; c < grid[0].size(); ++c) {
-                if(grid[r][c] == 0 && !visited[r][c]) {
-                    visited[r][c] = true;
-                    dfs(r, c, -1, -1, grid, visited, distToLand);
-                }
-            }
-        }
+        if(numWaterCells == 0 || numLandCells == 0)
+            return -1;
         
-        for(int r = 0; r < grid.size(); ++r) {
-            for(int c = 0; c < grid[0].size(); ++c) {
-                visited[r][c] = false;
+        int rows = grid.size(), cols = grid[0].size();
+        vector<vector<int>> distToLand(rows, vector<int>(cols, INF));
+        vector<pair<int, int>> landCells;
+        for(int r = 0; r < rows; ++r) {
+            for(int c = 0; c < cols; ++c) {
+                if(grid[r][c] == 1) landCells.push_back({r, c});
             }
         }
 
-        for(int r = 0; r < grid.size(); ++r) {
-            for(int c = 0; c < grid[0].size(); ++c) {
-                if(grid[r][c] == 0 && !visited[r][c]) {
-                    visited[r][c] = true;
-                    dfs(r, c, -1, -1, grid, visited, distToLand);
-                }
-            }
-        }
-
+        multisourceBfs(landCells, grid, distToLand);
         int dist = 0;
-        for(int r = 0; r < grid.size(); ++r) {
-            for(int c = 0; c < grid[0].size(); ++c) {
-                if(grid[r][c] == 0) {
-                    dist = max(dist, distToLand[r][c]);
-                }
+        for(int r = 0; r < rows; ++r) {
+            for(int c = 0; c < cols; ++c) {
+                dist = max(dist, distToLand[r][c]);
             }
         }
 
-        if(dist == INF || num0s == 0 || num1s == 0)
-            dist = -1;
-            
         return dist;
     }
 };
+
